@@ -394,18 +394,18 @@ public class OracleEnvironment extends AbstractDbEnvironment {
     // map types
     private static List<String> stringTypes = Arrays.asList(new String[] {
             "VARCHAR", "VARCHAR2", "NVARCHAR2", "CHAR", "NCHAR", "CLOB",
-            "NCLOB", "ROWID", "BOOLEAN", "RAW"
-        });
+            "NCLOB", "ROWID", "BOOLEAN" });
     private static List<String> decimalTypes = Arrays.asList(new String[] {
             "BINARY_INTEGER", "NUMBER", "FLOAT" });
     private static List<String> dateTypes = Arrays.asList(new String[] {});
     private static List<String> timestampTypes = Arrays.asList(new String[] {
             "DATE", "TIMESTAMP" });
-    private static List<String> refCursorTypes = Arrays
-            .asList(new String[] { "REF" });
+    private static List<String> refCursorTypes = Arrays.asList(new String[] { 
+            "REF" });
     private static List<String> objectTypes = Arrays.asList(new String[] {
             "OBJECT", "MDSYS.SDO_GEOMETRY" });
-
+    private static List<String> rawTypes = Arrays.asList(new String[] {
+            "RAW" });
     private static List<String> recordTypes = Arrays.asList(new String[] {
             "VARRAY", "TABLE" });
 
@@ -442,6 +442,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return OracleTypes.STRUCT;
         if (recordTypes.contains(dataTypeNormalised))
             return OracleTypes.ARRAY;
+        if (rawTypes.contains(dataTypeNormalised))
+            return java.sql.Types.BINARY;        
 
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
@@ -463,6 +465,8 @@ public class OracleEnvironment extends AbstractDbEnvironment {
             return java.sql.Struct.class;
         if (recordTypes.contains(dataType))
             return java.sql.Array.class;
+        if (rawTypes.contains(dataType))
+            return byte[].class;        
 
         throw new UnsupportedOperationException("Type " + dataType
                 + " is not supported");
