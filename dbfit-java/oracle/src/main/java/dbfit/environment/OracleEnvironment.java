@@ -228,6 +228,17 @@ public class OracleEnvironment extends AbstractDbEnvironment {
                 new OracleSerialClobNormaliser());
         TypeNormaliserFactory.setNormaliser(java.sql.Date.class,
                 new SqlDateNormaliser());
+        TypeNormaliserFactory.setNormaliser("RAW", new TypeTransformer() {
+                @Override
+                public Object transform(Object o) throws SQLException {
+                    if (o instanceof Blob) {
+                        Blob blob = (Blob) o;
+                        if (blob.length() > 0) {
+                            return blob.getBytes(1, (int) blob.length());
+                        }
+                    }
+                    return null;
+                }});
         try {
             TypeNormaliserFactory.setNormaliser(java.sql.ResultSet.class,
                     new OracleRefNormaliser());
